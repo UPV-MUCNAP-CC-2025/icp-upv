@@ -1,0 +1,125 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: Minimal API Gateway GET /hello -> Lambda (single stack) - external DynamoDB
+
+Parameters:
+  AthletesTableName:
+    Type: String
+    Default: alucloud92
+    Description: Existing DynamoDB table name (created outside CloudFormation)
+
+Resources:
+  LambdaRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+            Action: sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+      Policies:
+        - PolicyName: DynamoReadAthletes
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action:
+                  - dynamodb:Scan
+                Resource: !Sub arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/${AthletesTableName}
+
+  HelloLambda:
+    Type: AWS::Lambda::Function
+    Properties:
+      Runtime: python3.12
+      Handler: index.handler
+      Role: !GetAtt LambdaRole.Arn
+      Environment:
+        Variables:
+          TABLE_NAME: !Ref AthletesTableName
+      Code:
+        ZipFile: |
+          import json
+          import os
+          import boto3
+
+          ddb = boto3.resource("dynamodb")
+          table = ddb.Table(os.environ["TABLE_NAME"])
+
+          def handler(event, context):
+              resp = table.scan()
+              items = resp.get("Items", [])
+
+              athletes = [
+                  {
+                      "id": it.get("id"),
+                      "nombre": it.get("nombre"),
+                      "estado": it.get("estado"),
+                  }
+                  for it in items
+              ]
+
+              return {
+                  "statusCode": 200,
+                  "headers": {
+                    "content-type": "application/json",
+                    "access-control-allow-origin": "*",
+                    "access-control-allow-methods": "GET",
+                    "access-control-allow-headers": "*"
+                   },
+                  "body": json.dumps({
+                      "count": len(athletes),
+                      "athletes": athletes
+                  })
+              }
+
+  Api:
+    Type: AWS::ApiGateway::RestApi
+    Properties:
+      Name: hello-api
+
+  HelloResource:
+    Type: AWS::ApiGateway::Resource
+    Properties:
+      RestApiId: !Ref Api
+      ParentId: !GetAtt Api.RootResourceId
+      PathPart: hello
+
+  GetHello:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      RestApiId: !Ref Api
+      ResourceId: !Ref HelloResource
+      HttpMethod: GET
+      AuthorizationType: NONE
+      Integration:
+        Type: AWS_PROXY
+        IntegrationHttpMethod: POST
+        Uri: !Sub arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${HelloLambda.Arn}/invocations
+
+  LambdaPermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName: !Ref HelloLambda
+      Principal: apigateway.amazonaws.com
+      SourceArn: !Sub arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${Api}/*/GET/hello
+
+  Deployment:
+    Type: AWS::ApiGateway::Deployment
+    DependsOn: GetHello
+    Properties:
+      RestApiId: !Ref Api
+
+  Stage:
+    Type: AWS::ApiGateway::Stage
+    Properties:
+      RestApiId: !Ref Api
+      DeploymentId: !Ref Deployment
+      StageName: prod
+
+Outputs:
+  InvokeURL:
+    Value: !Sub https://${Api}.execute-api.${AWS::Region}.amazonaws.com/prod/hello
