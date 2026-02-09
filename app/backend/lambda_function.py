@@ -2,7 +2,7 @@ import json
 import boto3
 import os
 
-DDB_ENDPOINT = os.environ.get("DDB_ENDPOINT", "http://localstack:4566")  # dentro de docker-compose
+DDB_ENDPOINT = os.environ.get("DDB_ENDPOINT", "http://localstack:4566")
 AWS_REGION = os.environ.get("AWS_REGION", "us-east-1")
 
 dynamodb = boto3.resource(
@@ -13,7 +13,6 @@ dynamodb = boto3.resource(
     aws_secret_access_key=os.environ.get("AWS_SECRET_ACCESS_KEY", "test"),
 )
 
-# dynamodb = boto3.resource("dynamodb")
 table = dynamodb.Table("todos")
 
 def lambda_handler(event, context):
@@ -82,17 +81,16 @@ def response_error(status, message):
 
 
 def get_route(event):
-    # HTTP API v2 (por si algún día lo cambias)
+    # HTTP API v2 
     if event.get("routeKey"):
         return event["routeKey"]
 
     # REST API v1
     method = event.get("httpMethod")
-    resource = event.get("resource")  # aquí suele venir /todos o /todos/{id}
+    resource = event.get("resource")
     if method and resource:
         return f"{method} {resource}"
 
-    # fallback
     path = event.get("path")
     if method and path:
         return f"{method} {path}"
