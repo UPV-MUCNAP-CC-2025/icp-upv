@@ -2,6 +2,8 @@
 
 Aplicación de tareas (todo) con frontend en React (Vite) y backend serverless (API Gateway + Lambda + DynamoDB). El entorno local se levanta con **Docker** usando **LocalStack** y servicios auxiliares. Para el despliegue en producción se utiliza **CloudFormation** y **AWS**.
 
+![Architecture](./docs/images/architecture.png)
+
 ## Requisitos
 
 ### Entorno local
