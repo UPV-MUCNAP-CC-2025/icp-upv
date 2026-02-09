@@ -1,14 +1,26 @@
-import { defineConfig } from 'vite'
+import { defineConfig, loadEnv } from 'vite'
 import react from '@vitejs/plugin-react'
 
-export default defineConfig({
-  plugins: [react()],
-  server: {
-    proxy: {
-      '/todos': {
-        target: 'http://localstack:4566/restapis/g99vdf0lwk/dev/_user_request_',
-        changeOrigin: true
-      }
-    }
+export default defineConfig(({ mode }) => {
+  // carga .env, .env.local, etc.
+  const env = loadEnv(mode, process.cwd(), '')
+
+  const target = env.VITE_API_BASE_URL
+  if (!target) {
+    console.warn('[vite] VITE_API_BASE_URL is empty - proxy disabled')
+  }
+
+  return {
+    plugins: [react()],
+    server: {
+      proxy: target
+        ? {
+            '/todos': {
+              target,
+              changeOrigin: true,
+            },
+          }
+        : undefined,
+    },
   }
 })

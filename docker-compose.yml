@@ -61,4 +61,7 @@ services:
     volumes:
       - ./app/frontend:/app
       - /app/node_modules
-    command: npm run dev -- --host 0.0.0.0
+    depends_on:
+      localstack:
+        condition: service_healthy
+    command: ["sh", "-c", "/app/wait-for-apigw.sh && npm run dev -- --host 0.0.0.0"]
