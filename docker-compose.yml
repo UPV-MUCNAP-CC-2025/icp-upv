@@ -42,6 +42,15 @@ services:
       - ./localstack/apigateway:/swagger:ro
     depends_on:
       - localstack
+    entrypoint: ["/bin/sh","-c"]
+    command:
+      - |
+        echo "Esperando swagger.json...";
+        while [ ! -s /swagger/swagger.json ]; do
+          sleep 1
+        done
+        echo "swagger.json listo, arrancando Swagger UI"
+        exec /docker-entrypoint.sh nginx -g 'daemon off;'
 
   # Almacenaje de Objectos para el build del Frontend
   minio:
