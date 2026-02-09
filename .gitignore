@@ -1,5 +1,14 @@
+# Ignore S3 elements
 s3
+
+# Ignore zip files for Lambda
 *.zip
+
+# Ignore dynamically generated swagger settings
 swagger.*json
+
+# Ignore macOS index files.
 .DS_Store
+
+# Ignore dynamically generated frontend settings
 .env.local
