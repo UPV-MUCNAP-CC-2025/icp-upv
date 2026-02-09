@@ -1,0 +1,4 @@
+s3
+*.zip
+swagger.*json
+.DS_Store

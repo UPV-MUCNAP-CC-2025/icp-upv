@@ -5,10 +5,9 @@ export default defineConfig({
   plugins: [react()],
   server: {
     proxy: {
-      '/api': {
-        target: 'https://7c901jpome.execute-api.us-east-1.amazonaws.com',
-        changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/api/, '')
+      '/todos': {
+        target: 'http://localstack:4566/restapis/g99vdf0lwk/dev/_user_request_',
+        changeOrigin: true
       }
     }
   }

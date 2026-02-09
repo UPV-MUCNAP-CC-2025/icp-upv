@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-const API_URL = '/api/todos';
+const API_URL = '/todos';
 
 function App() {
   const [todos, setTodos] = useState([]);
