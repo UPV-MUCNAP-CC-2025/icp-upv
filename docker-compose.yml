@@ -1,4 +1,5 @@
 services:
+  # LocalStack (dynamodb,lambda,apigateway,logs)
   localstack:
     image: localstack/localstack:3
     container_name: localstack
@@ -15,6 +16,7 @@ services:
       - "./localstack/apigateway:/apigateway"
       - "/var/run/docker.sock:/var/run/docker.sock"
 
+  # Dashboard para DynamoDB 
   dynamodb-admin:
     image: aaronshaf/dynamodb-admin
     container_name: dynamodb-admin
@@ -28,6 +30,7 @@ services:
     depends_on:
       - localstack
 
+  # Documentación interactiva para API Gateway
   swagger-ui:
     image: swaggerapi/swagger-ui
     container_name: swagger-ui
@@ -40,7 +43,7 @@ services:
     depends_on:
       - localstack
 
-
+  # Almacenaje de Objectos para el build del Frontend
   minio:
     image: minio/minio
     container_name: minio
@@ -52,6 +55,7 @@ services:
       - MINIO_ROOT_USER=test
       - MINIO_ROOT_PASSWORD=test1234
 
+  # Frontend
   frontend:
     build:
       context: ./app/frontend
