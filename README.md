@@ -34,11 +34,11 @@ icp-upv
 ## Entorno local con LocalStack
 
 Para arrancar el entorno de desarrollo se ha de ejecutar el comando `docker compose up` en el directorio raíz. Pasados unos segundos se habrán desplegado los siguientes recursos:
-- **'Frontend'**: Servidor de desarrollo Vite en `http:localhost:5173`
-- **'Swagger'**: Documentación de la API Gateway en `http://localhost:8001`.
-- **'API Gateway'**: Disponible en la url dinámicamente creada en localstack.
-- **'DynamoDB-admin'**: UI para consultar información de DynamoDB tables desplegadas en localstack.
-- **'MinIO'**: Para subir el build de Vite, previo al pase a producción en `http://localhost:9000`.
+- **Frontend**: Servidor de desarrollo Vite en `http:localhost:5173`
+- **Swagger**: Documentación de la API Gateway en `http://localhost:8001`.
+- **API Gateway**: Disponible en la url dinámicamente creada en localstack.
+- **DynamoDB-admin**: UI para consultar información de DynamoDB tables desplegadas en localstack.
+- **MinIO**: Para subir el build de Vite, previo al pase a producción en `http://localhost:9000`.
 
 Para más información consulte [LocalStack docs](./docs/LOCALSTACK.md)
 
