@@ -1,4 +1,4 @@
-# ICP-UPV - 'Todo List´ - Trabajo 9 Despliegue de una API REST. 
+# ICP-UPV - Trabajo 9 Despliegue de una API REST. 
 
 Aplicación de tareas (todo) con frontend en React (Vite) y backend serverless (API Gateway + Lambda + DynamoDB). El entorno local se levanta con **Docker** usando **LocalStack** y servicios auxiliares. Para el despliegue en producción se utiliza **CloudFormation** y **AWS**.
 
