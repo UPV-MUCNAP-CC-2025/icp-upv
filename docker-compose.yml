@@ -8,7 +8,7 @@ services:
     environment:
       - SERVICES=dynamodb,lambda,apigateway,logs
       - DEBUG=0
-      - AWS_DEFAULT_REGION=eu-west-1
+      - AWS_DEFAULT_REGION=us-east-1
     volumes:
       - "./localstack/init:/etc/localstack/init/ready.d"
       - "./app/backend:/backend:ro"
@@ -24,7 +24,7 @@ services:
       - "8001:8001"
     environment:
       - DYNAMO_ENDPOINT=http://localstack:4566
-      - AWS_REGION=eu-west-1
+      - AWS_REGION=us-east-1
       - AWS_ACCESS_KEY_ID=test
       - AWS_SECRET_ACCESS_KEY=test
     depends_on:

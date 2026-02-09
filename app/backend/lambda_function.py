@@ -3,7 +3,7 @@ import boto3
 import os
 
 DDB_ENDPOINT = os.environ.get("DDB_ENDPOINT", "http://localstack:4566")  # dentro de docker-compose
-AWS_REGION = os.environ.get("AWS_REGION", "eu-west-1")
+AWS_REGION = os.environ.get("AWS_REGION", "us-east-1")
 
 dynamodb = boto3.resource(
     "dynamodb",

@@ -3,7 +3,7 @@ set -eu
 
 # Dentro de docker-compose, localstack se resuelve por nombre de servicio
 LS_ENDPOINT="http://localstack:4566"
-REGION="${AWS_DEFAULT_REGION:-eu-west-1}"
+REGION="${AWS_DEFAULT_REGION:-us-east-1}"
 STAGE="${API_STAGE:-dev}"
 
 # Recomendado: filtrar por nombre real de tu API
