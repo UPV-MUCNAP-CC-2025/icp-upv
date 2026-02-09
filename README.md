@@ -42,7 +42,7 @@ Para arrancar el entorno de desarrollo se ha de ejecutar el comando `docker comp
 - **DynamoDB-admin**: UI para consultar información de DynamoDB tables desplegadas en localstack en `http://localhost:8001`.
 - **MinIO**: Para subir el build de Vite, previo al pase a producción en `http://localhost:9000`.
 
-Para más información consulte [LocalStack docs](./docs/LOCALSTACK.md)
+Para más información consulte [LocalStack docs](./docs/localstack/LOCALSTACK.md)
 
 ## Despliegue en AWS
 Las plantillas CloudFormation están en `infrastructure/`. Ver `infrastructure/README.md` para detalles de despliegue y parámetros.
