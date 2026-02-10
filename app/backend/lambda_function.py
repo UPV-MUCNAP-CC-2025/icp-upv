@@ -50,23 +50,6 @@ def lambda_handler(event, context):
                 }
             )
             return response_ok(f"Todo {data['id']} save")
-        # PUT /todos/{id} => actualizar por id (evita crear nuevo)
-        elif route == "PUT /todos/{id}":
-            todo_id = event["pathParameters"]["id"]
-            data = json.loads(event["body"])
-            if not all(k in data for k in ("todo", "status")):
-                return response_error(400, "Faltan campos")
-            existing = table.get_item(Key={"id": todo_id})
-            if "Item" not in existing:
-                return response_error(404, "Todo no encontrado")
-            table.put_item(
-                Item={
-                    "id": todo_id,
-                    "todo": data["todo"],
-                    "status": data["status"]
-                }
-            )
-            return response_ok(f"Todo {todo_id} updated")
         #DELETE /todos/{id}        
         elif route == "DELETE /todos/{id}":
             todo_id = event["pathParameters"]["id"]
