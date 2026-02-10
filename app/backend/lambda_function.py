@@ -5,7 +5,7 @@ import os
 DDB_ENDPOINT = os.environ.get("DDB_ENDPOINT", "http://localstack:4566")
 AWS_REGION = os.environ.get("AWS_REGION", "us-east-1")
 
-table = dynamodb.Table("todos")
+table
 
 if "localstack" in DDB_ENDPOINT:
     dynamodb = boto3.resource(
@@ -15,6 +15,7 @@ if "localstack" in DDB_ENDPOINT:
         aws_access_key_id=os.environ.get("AWS_ACCESS_KEY_ID", "test"),
         aws_secret_access_key=os.environ.get("AWS_SECRET_ACCESS_KEY", "test"),
     )
+    table = dynamodb.Table("todos")
 else:
     dynamodb = boto3.resource("dynamodb")
     table = dynamodb.Table("alucloud92-todo-table")
