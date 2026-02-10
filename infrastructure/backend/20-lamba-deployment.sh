@@ -3,7 +3,9 @@ set -euo pipefail
 
 deploy_lambda() {
 
-  echo "Deploying stack: $CFN_LAMBDA_STACK"
+  echo "=================================================="
+  echo "🚀 Deploying stack: $CFN_LAMBDA_STACK"
+  echo "=================================================="
 
   aws cloudformation deploy \
     --template-file $CFN_LAMBDA_TEMPLATE \

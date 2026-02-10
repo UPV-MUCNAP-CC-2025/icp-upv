@@ -3,7 +3,9 @@ set -euo pipefail
 
 create_artifact() {
 
-  echo "Deploying stack: $CFN_BUCKET_STACK"
+  echo "=================================================="
+  echo "🚀 Deploying stack: $CFN_BUCKET_STACK"
+  echo "=================================================="
 
   aws cloudformation deploy \
     --template-file "$CFN_BUCKET_TEMPLATE" \

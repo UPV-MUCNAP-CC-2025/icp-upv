@@ -3,7 +3,9 @@ set -euo pipefail
 
 deploy_apigw() {
 
-  echo "Deploying stack: $CFN_APIGW_STACK"
+  echo "=================================================="
+  echo "🚀 Deploying stack: $CFN_APIGW_STACK"
+  echo "=================================================="
 
   aws cloudformation deploy \
     --template-file $CFN_APIGW_TEMPLATE \

@@ -2,6 +2,11 @@
 set -euo pipefail
 
 check_dynamodb() {
+
+  echo "=================================================="
+  echo "🚀 Checking DynamoDB: $DYNAMODB_TABLE_NAME"
+  echo "=================================================="
+
   aws dynamodb describe-table \
     --table-name $DYNAMODB_TABLE_NAME \
     >/dev/null 2>&1 || {

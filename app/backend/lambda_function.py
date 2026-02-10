@@ -5,15 +5,19 @@ import os
 DDB_ENDPOINT = os.environ.get("DDB_ENDPOINT", "http://localstack:4566")
 AWS_REGION = os.environ.get("AWS_REGION", "us-east-1")
 
-dynamodb = boto3.resource(
-    "dynamodb",
-    endpoint_url=DDB_ENDPOINT,
-    region_name=AWS_REGION,
-    aws_access_key_id=os.environ.get("AWS_ACCESS_KEY_ID", "test"),
-    aws_secret_access_key=os.environ.get("AWS_SECRET_ACCESS_KEY", "test"),
-)
-
 table = dynamodb.Table("todos")
+
+if "localstack" in DDB_ENDPOINT:
+    dynamodb = boto3.resource(
+        "dynamodb",
+        endpoint_url=DDB_ENDPOINT,
+        region_name=os.environ.get("AWS_REGION", "us-east-1"),
+        aws_access_key_id=os.environ.get("AWS_ACCESS_KEY_ID", "test"),
+        aws_secret_access_key=os.environ.get("AWS_SECRET_ACCESS_KEY", "test"),
+    )
+else:
+    dynamodb = boto3.resource("dynamodb")
+    table = dynamodb.Table("alucloud92-todo-table")
 
 def lambda_handler(event, context):
     print("EVENT:", json.dumps(event))
