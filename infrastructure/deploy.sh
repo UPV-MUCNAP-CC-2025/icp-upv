@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-export ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+export ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 
 # Variables comunes
-source "$ROOT_DIR/00-env.sh"
+source "$ROOT_DIR/infrastructure/00-env.sh"
 
 # Pasos
-source "$ROOT_DIR/backend/10-lambda-artifacts-bucket.sh";     create_artifact
+source "$ROOT_DIR/infrastructure/backend/10-lambda-artifacts-bucket.sh";     create_artifact
 
 echo "✅ Done"
