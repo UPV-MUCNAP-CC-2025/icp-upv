@@ -60,6 +60,12 @@ Resources:
       ApiId: !Ref Api
       RouteKey: "DELETE /todos/{id}"
       Target: !Sub integrations/${LambdaIntegration}
+  PutTodoByIdRoute:
+    Type: AWS::ApiGatewayV2::Route
+    Properties:
+      ApiId: !Ref Api
+      RouteKey: "PUT /todos/{id}"
+      Target: !Sub integrations/${LambdaIntegration}
 
   ###################################################################
   # Lambda permission (API Gateway -> imported lambda)

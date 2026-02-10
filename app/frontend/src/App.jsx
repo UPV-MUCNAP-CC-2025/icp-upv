@@ -53,7 +53,7 @@ function App() {
     const updatedTodo = { ...item, status: nuevoEstado };
 
     try {
-      await fetch(API_URL, {
+      await fetch(`${API_URL}/${encodeURIComponent(item.id)}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(updatedTodo),
@@ -66,7 +66,7 @@ function App() {
 
   const deleteTodo = async (id) => {
     try {
-      await fetch(`${API_URL}/${id}`, {
+      await fetch(`${API_URL}/${encodeURIComponent(id)}`, {
         method: 'DELETE',
       });
       fetchTodos();
@@ -80,7 +80,7 @@ function App() {
     const updatedTodo = { ...item, todo: editText };
 
     try {
-      await fetch(API_URL, {
+      await fetch(`${API_URL}/${encodeURIComponent(item.id)}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(updatedTodo),
