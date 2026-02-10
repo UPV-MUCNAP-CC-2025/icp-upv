@@ -39,6 +39,10 @@ Resources:
               - Effect: Allow
                 Action:
                   - dynamodb:Scan
+                  - dynamodb:GetItem
+                  - dynamodb:PutItem
+                  - dynamodb:DeleteItem
+                  - dynamodb:UpdateItem
                 Resource: !Sub arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/${ToDoTableName}
 
   TodoLambda:
