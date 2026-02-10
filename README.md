@@ -46,5 +46,19 @@ Para arrancar el entorno de desarrollo se ha de ejecutar el comando `docker comp
 
 Para más información consulte [LocalStack docs](./docs/localstack/LOCALSTACK.md)
 
-## Despliegue en AWS
-Las plantillas CloudFormation están en `infrastructure/`. Ver `infrastructure/README.md` para detalles de despliegue y parámetros.
+## Entorno productivo en AWS
+
+Para el despliegue en AWS se ha optado por utilizar **CloudFormation** por medio de la AWS CLI y utilizando scripts de bash para apoyo y simplificación de tareas. Las plantillas CloudFormation se encuentran en `infrastructure/`.
+
+### Despliegue
+
+```bash
+./infrastructure/deploy.sh
+```
+
+## Destrucción
+
+```bash
+./infrastructure/destroy.sh
+```
+Para más información consulte [Infrastructure docs](./docs/infrastructure/INFRASTRUCTURE.md)
