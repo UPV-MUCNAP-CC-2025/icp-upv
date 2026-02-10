@@ -30,7 +30,7 @@ while :; do
   sleep 1
 done
 
-VITE_API_BASE_URL="$LS_ENDPOINT/restapis/$API_ID/$STAGE/_user_request_"
+VITE_API_BASE_URL="http://localhost:4566/restapis/$API_ID/$STAGE/_user_request_"
 export VITE_API_BASE_URL
 
 echo "✅ API_ID=$API_ID"
