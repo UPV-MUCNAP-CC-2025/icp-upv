@@ -56,7 +56,7 @@ Para el despliegue en AWS se ha optado por utilizar **CloudFormation** por medio
 ./infrastructure/deploy.sh
 ```
 
-## Destrucción
+### Destrucción
 
 ```bash
 ./infrastructure/destroy.sh
