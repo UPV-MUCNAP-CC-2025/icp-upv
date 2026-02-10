@@ -11,7 +11,7 @@ if DDB_ENDPOINT:
     dynamodb = boto3.resource(
         "dynamodb",
         endpoint_url=DDB_ENDPOINT,
-        region_name=AWS_REGION or "us-east-1",
+        region_name=AWS_REGION,
         aws_access_key_id=os.environ.get("AWS_ACCESS_KEY_ID", "test"),
         aws_secret_access_key=os.environ.get("AWS_SECRET_ACCESS_KEY", "test"),
     )
