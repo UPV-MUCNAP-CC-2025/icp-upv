@@ -3,10 +3,7 @@ import boto3
 import os
 
 DDB_ENDPOINT = os.environ.get("DDB_ENDPOINT")
-AWS_REGION = os.environ.get("AWS_REGION")
-
-DDB_ENDPOINT = os.environ.get("DDB_ENDPOINT")
-AWS_REGION = os.environ.get("AWS_REGION")
+AWS_REGION = os.environ.get("AWS_REGION", "us-east-1")
 TABLE_NAME = os.environ["TABLE_NAME"]
 
 if DDB_ENDPOINT:
