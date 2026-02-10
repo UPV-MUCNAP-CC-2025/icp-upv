@@ -11,7 +11,8 @@ create_frontend() {
     --template-file "$CFN_FRONT_TEMPLATE" \
     --stack-name "$CFN_FRONT_STACK"
 
-  (cd app/frontend && npm ci && npm run build)
+  (cd "$ROOT_DIR/app/frontend" && npm ci && npm run build)
+
   aws s3 sync app/frontend/dist "s3://$CFN_FRONT_STACK" --delete
 
 }
