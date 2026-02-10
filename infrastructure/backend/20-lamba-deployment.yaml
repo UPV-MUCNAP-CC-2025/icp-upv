@@ -14,6 +14,10 @@ Parameters:
     Type: String
     Description: S3 key (path) to the lambda zip (e.g. lambdas/todo-lambda.zip)
 
+  LambdaCodeVersion:
+    Type: String
+    Description: Versioning, otherwise lamba function is not updating on deployment.
+
 Resources:
   LambdaRole:
     Type: AWS::IAM::Role
@@ -49,6 +53,7 @@ Resources:
       Code:
         S3Bucket: !Ref LambdaCodeBucket
         S3Key: !Ref LambdaCodeKey
+        S3ObjectVersion: !Ref LambdaCodeVersion
 
 Outputs:
   TodoLambdaArn:
