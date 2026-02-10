@@ -53,5 +53,10 @@ Resources:
 Outputs:
   TodoLambdaArn:
     Value: !GetAtt TodoLambda.Arn
+    Export:
+      Name: alucloud92-lambdas-TodoLambdaArn
+
   TodoLambdaName:
     Value: !Ref TodoLambda
+    Export:
+      Name: alucloud92-lambdas-TodoLambdaName

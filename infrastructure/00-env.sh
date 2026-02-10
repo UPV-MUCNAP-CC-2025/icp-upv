@@ -17,3 +17,7 @@ export AWS_DEFAULT_REGION="us-east-1"
 
 # DynamoDB
 export DYNAMODB_TABLE_NAME="alucloud92-todo-table"
+
+# API Gateway
+export CFN_APIGW_TEMPLATE="$ROOT_DIR/infrastructure/backend/30-api-gateway-deployment.yaml"
+export CFN_APIGW_STACK="alucloud92-api-gateway"
