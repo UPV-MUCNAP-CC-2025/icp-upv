@@ -6,7 +6,7 @@ El objetivo de esta carpeta es permitir el **despliegue reproducible** de una ar
 
 ## Requisitos
 
-Debido a las restricciones que presentan las cuentas de estudiantes del MUCNAP en AWS, no es posible crear mediante tablas de DynamoDB en CloudFormation, ya que se necesita el persmiso de *DescribeTables* y el usuario no dispone del mismo. 
+Debido a las restricciones que presentan las cuentas de estudiantes del MUCNAP en AWS, no es posible crear tablas de DynamoDB en CloudFormation, ya que se necesita el persmiso de *DescribeTables* y el usuario no dispone del mismo. 
 
 Como alternativa se require que la tabla **alucloud92-todo-table** sea creada con anterioridad al despliegue. El script `infrastructure/backend/00-check-dynamodb-table.sh` es el encargado de comprobar que el recurso existe con anterioridad a la creación de los diferentes stacks de CloudFormation.
 
