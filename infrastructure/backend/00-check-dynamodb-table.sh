@@ -3,7 +3,7 @@ set -euo pipefail
 
 check_dynamodb() {
   aws dynamodb describe-table \
-    --table-name alucloud92-todo-table \
+    --table-name $DYNAMODB_TABLE_NAME \
     >/dev/null 2>&1 || {
       echo "ERROR: La tabla DynamoDB 'alucloud92-todo-table' NO existe."
       echo "Esta tabla es obligatoria para el despliegue."
