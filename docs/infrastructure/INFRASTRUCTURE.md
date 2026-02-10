@@ -1,99 +1,68 @@
 # Infrastructure
 
-This folder contains the CloudFormation templates needed to deploy the system on AWS. It is split into two stacks:
+Este directorio contiene toda la definición y automatización de la **infraestructura en AWS** del proyecto, utilizando **AWS CloudFormation** y **scripts Bash** para facilitar el despliegue, verificación y eliminación de los recursos necesarios.
 
-- `backend.yaml` for the API (API Gateway + Lambda) and IAM role.
-- `frontend.yaml` for the static website hosting (S3 bucket + public read policy).
+El objetivo de esta carpeta es permitir el **despliegue reproducible** de una arquitectura **serverless** en un entorno real de AWS, equivalente a la utilizada durante el desarrollo local con LocalStack.
 
-Everything here is designed to be minimal and easy to deploy from the AWS Console or AWS CLI.
+## Requisitos
 
-## Prerequisites
+Debido a las restricciones que presentan las cuentas de estudiantes del MUCNAP en AWS, no es posible crear mediante tablas de DynamoDB en CloudFormation, ya que se necesita el persmiso de *DescribeTables* y el usuario no dispone del mismo. 
 
-- An AWS account with permissions for IAM, Lambda, API Gateway, S3, and CloudFormation.
-- A DynamoDB table created outside CloudFormation (the backend template only reads from it).
-- AWS region selected consistently for all resources.
+Como alternativa se require que la tabla **alucloud92-todo-table** sea creada con anterioridad al despliegue. El script `infrastructure/backend/00-check-dynamodb-table.sh` es el encargado de comprobar que el recurso existe con anterioridad a la creación de los diferentes stacks de CloudFormation.
+
+## Estructura del directorio
+
+```
+infrastructure/
+├── 00-env.sh
+├── deploy.sh
+├── destroy.sh
+├── backend/
+│   ├── 00-check-dynamodb-table.sh
+│   ├── 10-lambda-artifacts-bucket.yaml
+│   ├── 10-lambda-artifacts-bucket.sh
+│   ├── 20-lambda-deployment.yaml
+│   ├── 20-lambda-deployment.sh
+│   ├── 30-api-gateway-deployment.yaml
+│   └── 30-api-gateway-deployment.sh
+└── frontend/
+    ├── 10-s3-front-deployment.yaml
+    └── 10-s3-front-deployment.sh
+```
+
+---
 
 ## Backend
 
-Template: `infrastructure/backend.yaml`
+El subdirectorio `backend/` contiene los recursos necesarios para desplegar la API y su lógica de negocio:
 
-What it creates:
+- **Bucket de artefactos Lambda**: almacenamiento de los paquetes ZIP de las funciones.
+- **Función AWS Lambda**: implementación de la lógica CRUD y configuración IAM.
+- **API Gateway**: definición de recursos, métodos HTTP e integración con Lambda.
+- **Scripts de verificación**: comprobaciones previas sobre DynamoDB.
 
-- IAM role for Lambda with `AWSLambdaBasicExecutionRole` plus permission to `Scan` a DynamoDB table.
-- Lambda function (Python 3.12) that reads all items from the DynamoDB table and returns JSON.
-- API Gateway REST API with `GET /hello` integrated as AWS_PROXY to the Lambda.
-- API Gateway deployment and `prod` stage.
-
-Important parameters:
-
-- `AthletesTableName`: Name of the existing DynamoDB table. Default is `alucloud92`.
-
-Behavior:
-
-- Response body includes `count` and `athletes` array.
-- CORS headers are enabled for `GET`.
-
-Outputs:
-
-- `InvokeURL`: The full URL for `GET /hello`.
-
-Example response (shape):
-
-```json
-{
-  "count": 2,
-  "athletes": [
-    { "id": "1", "nombre": "Ana", "estado": "activo" },
-    { "id": "2", "nombre": "Luis", "estado": "inactivo" }
-  ]
-}
-```
-
-Notes:
-
-- The Lambda uses `Scan`, so it reads the whole table. This is fine for small datasets but not ideal for large tables.
-- The DynamoDB table must already exist and contain `id`, `nombre`, and `estado` attributes to match the response mapping.
+---
 
 ## Frontend
 
-Template: `infrastructure/frontend.yaml`
+El subdirectorio `frontend/` contiene la definición de la infraestructura necesaria para servir el cliente web:
 
-What it creates:
+- **Amazon S3 Static Website Hosting** para alojar el frontend desarrollado en React.
 
-- S3 bucket configured for static website hosting.
-- Bucket policy allowing public `s3:GetObject`.
+---
 
-Outputs:
-
-- `BucketName`: The S3 bucket name.
-- `WebsiteURL`: The public website endpoint.
-
-Notes:
-
-- The bucket name is fixed to `alucloud92-public-frontend` in the template, so it must be globally unique in S3.
-- To update the site, upload your `index.html` and assets to the bucket.
-
-## Deployment (CLI)
-
-Backend:
+## Despliegue
 
 ```bash
-aws cloudformation deploy \
-  --template-file infrastructure/backend.yaml \
-  --stack-name alucloud92-backend \
-  --parameter-overrides AthletesTableName=alucloud92 \
-  --capabilities CAPABILITY_NAMED_IAM
+cd infrastructure
+./deploy.sh
 ```
 
-Frontend:
+---
+
+## Eliminación de la infraestructura
 
 ```bash
-aws cloudformation deploy \
-  --template-file infrastructure/frontend.yaml \
-  --stack-name alucloud92-frontend
+source 00-env.sh
+./destroy.sh
 ```
-
-## Troubleshooting
-
-- If the backend stack fails on IAM, ensure you passed `--capabilities CAPABILITY_NAMED_IAM`.
-- If the frontend stack fails, the bucket name is likely already taken; update `BucketName` in `frontend.yaml`.
