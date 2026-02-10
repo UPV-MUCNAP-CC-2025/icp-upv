@@ -1,0 +1,45 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: S3 bucket to store Lambda deployment artifacts (ZIP files)
+
+###################################################################
+# Parameters
+###################################################################
+Parameters:
+  BucketBaseName:
+    Type: String
+    Default: alucloud92-lambda-artifacts
+    Description: Base name for the Lambda artifacts bucket
+
+###################################################################
+# Resources
+###################################################################
+Resources:
+
+  LambdaArtifactsBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Sub ${BucketBaseName}-${AWS::AccountId}
+      VersioningConfiguration:
+        Status: Enabled
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        BlockPublicPolicy: true
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
+      Tags:
+        - Key: purpose
+          Value: lambda-artifacts
+        - Key: managed-by
+          Value: cloudformation
+
+###################################################################
+# Outputs
+###################################################################
+Outputs:
+  BucketName:
+    Description: Name of the S3 bucket for Lambda artifacts
+    Value: !Ref LambdaArtifactsBucket
+
+  BucketArn:
+    Description: ARN of the S3 bucket for Lambda artifacts
+    Value: !GetAtt LambdaArtifactsBucket.Arn
