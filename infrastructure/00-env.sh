@@ -6,7 +6,7 @@ export CFN_BUCKET_TEMPLATE="$ROOT_DIR/infrastructure/backend/10-lambda-artifacts
 export CFN_BUCKET_STACK="alucloud92-lambda-artifacts"
 
 # Lambda
-export CFN_LAMBDA_TEMPLATE="$ROOT_DIR/infrastructure/backend/20-lamba-deployment.yaml"
+export CFN_LAMBDA_TEMPLATE="$ROOT_DIR/infrastructure/backend/20-lambda-deployment.yaml"
 export CFN_LAMBDA_STACK="alucloud92-lambdas"
 export LAMBDA_PY="$ROOT_DIR/app/backend/lambda_function.py"
 export LAMBDA_ZIP="$ROOT_DIR/app/backend/lambda.zip"

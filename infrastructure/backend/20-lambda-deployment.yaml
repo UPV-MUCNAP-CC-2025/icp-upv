@@ -16,7 +16,7 @@ Parameters:
 
   LambdaCodeVersion:
     Type: String
-    Description: Versioning, otherwise lamba function is not updating on deployment.
+    Description: Versioning, otherwise lambda function is not updating on deployment.
 
 Resources:
   LambdaRole:
