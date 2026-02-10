@@ -17,7 +17,7 @@ create_frontend() {
     --output text)"
 
   (cd "$ROOT_DIR/app/frontend" \
-    && export VITE_API_BASE_URL="$API_URL" \
+    && export VITE_API_BASE_URL="$API_URL/prod" \
     && npm ci \
     && npm run build)
     
