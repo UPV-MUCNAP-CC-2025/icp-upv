@@ -18,7 +18,7 @@ Resources:
   LambdaArtifactsBucket:
     Type: AWS::S3::Bucket
     Properties:
-      BucketName: !Sub ${BucketBaseName}-${AWS::AccountId}
+      BucketName: !Sub ${BucketBaseName}
       VersioningConfiguration:
         Status: Enabled
       PublicAccessBlockConfiguration:
