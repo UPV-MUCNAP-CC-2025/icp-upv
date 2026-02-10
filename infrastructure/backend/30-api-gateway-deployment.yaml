@@ -1,145 +1,65 @@
 # infrastructure/apigw.yaml
 AWSTemplateFormatVersion: "2010-09-09"
-Description: API Gateway REST (v1) -> Imported TodoLambda (CRUD /todos)
+Description: API Gateway HTTP API (v2) -> Imported TodoLambda (CRUD /todos)
 
 Resources:
   Api:
-    Type: AWS::ApiGateway::RestApi
+    Type: AWS::ApiGatewayV2::Api
     Properties:
       Name: alucloud92-todos-api
+      ProtocolType: HTTP
+      CorsConfiguration:
+        AllowOrigins:
+          - "*"
+        AllowMethods:
+          - GET
+          - PUT
+          - DELETE
+          - OPTIONS
+        AllowHeaders:
+          - "*"
 
-  # /todos
-  TodosResource:
-    Type: AWS::ApiGateway::Resource
+  LambdaIntegration:
+    Type: AWS::ApiGatewayV2::Integration
     Properties:
-      RestApiId: !Ref Api
-      ParentId: !GetAtt Api.RootResourceId
-      PathPart: todos
-
-  # /todos/{id}
-  TodoIdResource:
-    Type: AWS::ApiGateway::Resource
-    Properties:
-      RestApiId: !Ref Api
-      ParentId: !Ref TodosResource
-      PathPart: "{id}"
-
-  ###################################################################
-  # Methods: /todos
-  ###################################################################
-  GetTodos:
-    Type: AWS::ApiGateway::Method
-    Properties:
-      RestApiId: !Ref Api
-      ResourceId: !Ref TodosResource
-      HttpMethod: GET
-      AuthorizationType: NONE
-      Integration:
-        Type: AWS_PROXY
-        IntegrationHttpMethod: POST
-        Uri: !Sub
-          - arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${LambdaArn}/invocations
-          - { LambdaArn: !ImportValue alucloud92-lambdas-TodoLambdaArn }
-
-  PutTodos:
-    Type: AWS::ApiGateway::Method
-    Properties:
-      RestApiId: !Ref Api
-      ResourceId: !Ref TodosResource
-      HttpMethod: PUT
-      AuthorizationType: NONE
-      Integration:
-        Type: AWS_PROXY
-        IntegrationHttpMethod: POST
-        Uri: !Sub
-          - arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${LambdaArn}/invocations
-          - { LambdaArn: !ImportValue alucloud92-lambdas-TodoLambdaArn }
+      ApiId: !Ref Api
+      IntegrationType: AWS_PROXY
+      IntegrationUri: !ImportValue alucloud92-lambdas-TodoLambdaArn
+      PayloadFormatVersion: "2.0"
 
   ###################################################################
-  # Methods: /todos/{id}
+  # Routes: /todos
   ###################################################################
-  GetTodoById:
-    Type: AWS::ApiGateway::Method
+  GetTodosRoute:
+    Type: AWS::ApiGatewayV2::Route
     Properties:
-      RestApiId: !Ref Api
-      ResourceId: !Ref TodoIdResource
-      HttpMethod: GET
-      AuthorizationType: NONE
-      RequestParameters:
-        method.request.path.id: true
-      Integration:
-        Type: AWS_PROXY
-        IntegrationHttpMethod: POST
-        Uri: !Sub
-          - arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${LambdaArn}/invocations
-          - { LambdaArn: !ImportValue alucloud92-lambdas-TodoLambdaArn }
+      ApiId: !Ref Api
+      RouteKey: "GET /todos"
+      Target: !Sub integrations/${LambdaIntegration}
 
-  DeleteTodoById:
-    Type: AWS::ApiGateway::Method
+  PutTodosRoute:
+    Type: AWS::ApiGatewayV2::Route
     Properties:
-      RestApiId: !Ref Api
-      ResourceId: !Ref TodoIdResource
-      HttpMethod: DELETE
-      AuthorizationType: NONE
-      RequestParameters:
-        method.request.path.id: true
-      Integration:
-        Type: AWS_PROXY
-        IntegrationHttpMethod: POST
-        Uri: !Sub
-          - arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${LambdaArn}/invocations
-          - { LambdaArn: !ImportValue alucloud92-lambdas-TodoLambdaArn }
+      ApiId: !Ref Api
+      RouteKey: "PUT /todos"
+      Target: !Sub integrations/${LambdaIntegration}
 
   ###################################################################
-  # CORS (OPTIONS)
+  # Routes: /todos/{id}
   ###################################################################
-  OptionsTodos:
-    Type: AWS::ApiGateway::Method
+  GetTodoByIdRoute:
+    Type: AWS::ApiGatewayV2::Route
     Properties:
-      RestApiId: !Ref Api
-      ResourceId: !Ref TodosResource
-      HttpMethod: OPTIONS
-      AuthorizationType: NONE
-      Integration:
-        Type: MOCK
-        RequestTemplates:
-          application/json: '{ "statusCode": 200 }'
-        IntegrationResponses:
-          - StatusCode: 200
-            ResponseParameters:
-              method.response.header.Access-Control-Allow-Origin: "'*'"
-              method.response.header.Access-Control-Allow-Methods: "'GET,PUT,OPTIONS'"
-              method.response.header.Access-Control-Allow-Headers: "'*'"
-      MethodResponses:
-        - StatusCode: 200
-          ResponseParameters:
-            method.response.header.Access-Control-Allow-Origin: true
-            method.response.header.Access-Control-Allow-Methods: true
-            method.response.header.Access-Control-Allow-Headers: true
+      ApiId: !Ref Api
+      RouteKey: "GET /todos/{id}"
+      Target: !Sub integrations/${LambdaIntegration}
 
-  OptionsTodoId:
-    Type: AWS::ApiGateway::Method
+  DeleteTodoByIdRoute:
+    Type: AWS::ApiGatewayV2::Route
     Properties:
-      RestApiId: !Ref Api
-      ResourceId: !Ref TodoIdResource
-      HttpMethod: OPTIONS
-      AuthorizationType: NONE
-      Integration:
-        Type: MOCK
-        RequestTemplates:
-          application/json: '{ "statusCode": 200 }'
-        IntegrationResponses:
-          - StatusCode: 200
-            ResponseParameters:
-              method.response.header.Access-Control-Allow-Origin: "'*'"
-              method.response.header.Access-Control-Allow-Methods: "'GET,DELETE,OPTIONS'"
-              method.response.header.Access-Control-Allow-Headers: "'*'"
-      MethodResponses:
-        - StatusCode: 200
-          ResponseParameters:
-            method.response.header.Access-Control-Allow-Origin: true
-            method.response.header.Access-Control-Allow-Methods: true
-            method.response.header.Access-Control-Allow-Headers: true
+      ApiId: !Ref Api
+      RouteKey: "DELETE /todos/{id}"
+      Target: !Sub integrations/${LambdaIntegration}
 
   ###################################################################
   # Lambda permission (API Gateway -> imported lambda)
@@ -150,29 +70,17 @@ Resources:
       Action: lambda:InvokeFunction
       FunctionName: !ImportValue alucloud92-lambdas-TodoLambdaArn
       Principal: apigateway.amazonaws.com
-      SourceArn: !Sub arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${Api}/*/*/*
+      SourceArn: !Sub arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${Api}/*/*
 
   ###################################################################
-  # Deploy + Stage
+  # Stage (environment)
   ###################################################################
-  Deployment:
-    Type: AWS::ApiGateway::Deployment
-    DependsOn:
-      - GetTodos
-      - PutTodos
-      - GetTodoById
-      - DeleteTodoById
-      - OptionsTodos
-      - OptionsTodoId
-    Properties:
-      RestApiId: !Ref Api
-
   Stage:
-    Type: AWS::ApiGateway::Stage
+    Type: AWS::ApiGatewayV2::Stage
     Properties:
-      RestApiId: !Ref Api
-      DeploymentId: !Ref Deployment
+      ApiId: !Ref Api
       StageName: prod
+      AutoDeploy: true
 
 Outputs:
   TodosBaseUrl:
