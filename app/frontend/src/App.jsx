@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-const base = import.meta.env.VITE_API_BASE_URL;
+const API_URL = import.meta.env.VITE_API_BASE_URL;
 
 function App() {
   const [todos, setTodos] = useState([]);
