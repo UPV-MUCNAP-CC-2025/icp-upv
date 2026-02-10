@@ -2,8 +2,8 @@
 set -euo pipefail
 
 # CloudFormation
-export CFN_BUCKET_TEMPLATE="10_lambda-artifacts-bucket.yaml"
-export CFN_BUCKET_STACK="alucloud92_lambda-artifacts"
+export CFN_BUCKET_TEMPLATE="$ROOT_DIR/backend/10-lambda-artifacts-bucket.yaml"
+export CFN_BUCKET_STACK="alucloud92-lambda-artifacts"
 
 # Lambda
 export LAMBDA_PY="$ROOT_DIR/app/backend/lambda_function.py"
